@@ -436,7 +436,7 @@
           <div class="swiper-slide outfit-product-card" data-block-id="{{ block.id }}">
             <div class="product-image">
               {% if product.featured_image %}
-              <img src="{{ product.featured_image | img_url: '300x' }}" width="" height="" alt="{{ product.featured_image.alt | escape }}"
+              <img src="{{ product.featured_image | img_url: '300x' }}" alt="{{ product.featured_image.alt | escape }}"
                 loading="lazy">
               {% endif %}
             </div>

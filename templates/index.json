@@ -23,12 +23,6 @@
             "product": "test1"
           }
         },
-        "product_3WVVwQ": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
         "product_tb7pEG": {
           "type": "product",
           "settings": {
@@ -44,7 +38,6 @@
       },
       "block_order": [
         "product_xXc8Fc",
-        "product_3WVVwQ",
         "product_tb7pEG",
         "product_MDMQ8c"
       ],

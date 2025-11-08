@@ -1,92 +1,5 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
-
-<div class="outfit-builder-section page-width">
-  <div class="outfit-builder-container">
-    {% if section.settings.image %}
-    <div class="outfit-builder-image">
-      <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.image.alt | escape }}"
-        loading="lazy" width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}">
-    </div>
-    {% endif %}
-
-    <div class="outfit-builder-products">
-      <div class="swiper outfit-swiper">
-        <div class="swiper-wrapper">
-          {% for block in section.blocks %}
-          {% if block.settings.product != blank %}
-          {% assign product = block.settings.product %}
-          {% assign first_variant = product.selected_or_first_available_variant %}
-
-          <div class="swiper-slide outfit-product-card" data-block-id="{{ block.id }}">
-            <div class="product-image">
-              {% if product.featured_image %}
-              <img src="{{ product.featured_image | img_url: '300x' }}" alt="{{ product.featured_image.alt | escape }}"
-                loading="lazy">
-              {% endif %}
-            </div>
-
-            <div class="product-details">
-              <div class="product-header">
-                <h3 class="product-title">{{ product.title }}</h3>
-                <div class="product-price">
-                  {% if product.compare_at_price > product.price %}
-                  <span class="price-sale">{{ product.price | money }}</span>
-                  <span class="price-compare">{{ product.compare_at_price | money }}</span>
-                  {% else %}
-                  <span class="price-regular">{{ product.price | money }}</span>
-                  {% endif %}
-                </div>
-              </div>
-
-              {% if product.description != blank %}
-              <p class="product-description">{{ product.description | strip_html | truncate: 60 }}</p>
-              {% endif %}
-
-              <div class="product-actions">
-                {% if product.has_only_default_variant %}
-                <div class="variant-selector">
-                  <span class="variant-label">One Size</span>
-                </div>
-                {% else %}
-                <div class="variant-selector">
-                  <select class="variant-select" data-product-id="{{ product.id }}"
-                    aria-label="Select variant for {{ product.title }}">
-                    {% for variant in product.variants %}
-                    <option value="{{ variant.id }}" {% if variant==first_variant %}selected{% endif %} {% unless
-                      variant.available %}disabled{% endunless %}>
-                      {{ variant.title }}
-                      {% unless variant.available %} - Sold Out{% endunless %}
-                    </option>
-                    {% endfor %}
-                  </select>
-                </div>
-                {% endif %}
-
-                <button class="add-to-cart-btn" data-variant-id="{{ first_variant.id }}"
-                  data-product-id="{{ product.id }}" {% unless first_variant.available %}disabled{% endunless %}
-                  tabindex="0" aria-label="Add {{ product.title }} to cart">
-                  {% if first_variant.available %}
-                  Add to bag
-                  {% else %}
-                  Sold Out
-                  {% endif %}
-                </button>
-              </div>
-            </div>
-          </div>
-          {% endif %}
-          {% endfor %}
-        </div>
-
-        <div class="swiper-pagination"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <style>
   .outfit-builder-section {
-    padding: 40px 20px;
     margin: 0 auto;
   }
 
@@ -304,9 +217,6 @@
 
   /* Tablet styles */
   @media screen and (min-width: 750px) {
-    .outfit-builder-section {
-      padding: 60px 40px;
-    }
 
     .outfit-builder-container {
       grid-template-columns: 1fr 1fr;
@@ -390,7 +300,6 @@
     }
   }
 
-  /* Mobile-specific styles */
   @media screen and (max-width: 749px) {
     .outfit-builder-image {
       max-height: 500px;
@@ -402,22 +311,97 @@
     }
   }
 
-  @media screen and (min-width: 320px) {
-    .outfit-builder-section {
-      min-width: 320px;
-    }
-  }
 </style>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" defer ></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+<div class="outfit-builder-section page-width">
+  <div class="outfit-builder-container">
+    {% if section.settings.image %}
+    <div class="outfit-builder-image">
+      <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.image.alt | escape }}"
+        loading="lazy" width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}">
+    </div>
+    {% endif %}
+
+    <div class="outfit-builder-products">
+      <div class="swiper outfit-swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+          {% if block.settings.product != blank %}
+          {% assign product = block.settings.product %}
+          {% assign first_variant = product.selected_or_first_available_variant %}
+
+          <div class="swiper-slide outfit-product-card" data-block-id="{{ block.id }}">
+            <div class="product-image">
+              {% if product.featured_image %}
+              <img src="{{ product.featured_image | img_url: '300x' }}" alt="{{ product.featured_image.alt | escape }}"
+                loading="lazy">
+              {% endif %}
+            </div>
+
+            <div class="product-details">
+              <div class="product-header">
+                <h3 class="product-title">{{ product.title }}</h3>
+                <div class="product-price">
+                  {% if product.compare_at_price > product.price %}
+                  <span class="price-sale">{{ product.price | money }}</span>
+                  <span class="price-compare">{{ product.compare_at_price | money }}</span>
+                  {% else %}
+                  <span class="price-regular">{{ product.price | money }}</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if product.description != blank %}
+              <p class="product-description">{{ product.description | strip_html | truncate: 60 }}</p>
+              {% endif %}
+
+              <div class="product-actions">
+                {% if product.has_only_default_variant %}
+                <div class="variant-selector">
+                  <span class="variant-label">One Size</span>
+                </div>
+                {% else %}
+                <div class="variant-selector">
+                  <select class="variant-select" data-product-id="{{ product.id }}"
+                    aria-label="Select variant for {{ product.title }}">
+                    {% for variant in product.variants %}
+                    <option value="{{ variant.id }}" {% if variant==first_variant %}selected{% endif %} {% unless
+                      variant.available %}disabled{% endunless %}>
+                      {{ variant.title }}
+                      {% unless variant.available %} - Sold Out{% endunless %}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                {% endif %}
+
+                <button class="add-to-cart-btn" data-variant-id="{{ first_variant.id }}"
+                  data-product-id="{{ product.id }}" {% unless first_variant.available %}disabled{% endunless %}
+                  tabindex="0" aria-label="Add {{ product.title }} to cart">
+                  {% if first_variant.available %}
+                  Add to bag
+                  {% else %}
+                  Sold Out
+                  {% endif %}
+                </button>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   (function ($) {
     'use strict';
 
     $(document).ready(function () {
-      // Initialize Swiper for mobile
       let swiper;
 
       function initSwiper() {
@@ -444,7 +428,6 @@
       initSwiper();
       $(window).on('resize', initSwiper);
 
-      // Handle variant selection
       $('.variant-select').on('change', function () {
         const $card = $(this).closest('.outfit-product-card');
         const $addBtn = $card.find('.add-to-cart-btn');
@@ -459,7 +442,6 @@
         }
       });
 
-      // Handle add to cart with jQuery AJAX
       $('.add-to-cart-btn').on('click', function (e) {
         e.preventDefault();
 
@@ -472,10 +454,8 @@
         const variantId = $btn.data('variant-id');
         const originalText = $btn.text();
 
-        // Add loading state
         $btn.addClass('loading').prop('disabled', true);
 
-        // AJAX request to add product to cart
         $.ajax({
           url: '/cart/add.js',
           method: 'POST',
@@ -488,15 +468,12 @@
           success: function (data) {
             console.log('Product added to cart:', data);
 
-            // Update cart count if theme has this functionality
             if (typeof theme !== 'undefined' && theme.cartUpdateAll) {
               theme.cartUpdateAll();
             }
 
-            // Trigger custom cart update event
             $(document).trigger('cart:updated', data);
 
-            // Get updated cart data
             $.ajax({
               url: '/cart.js',
               method: 'GET',
@@ -509,7 +486,6 @@
                   $('.cart-count, .cart-count-bubble').text(cart.item_count);
                 }
 
-                // Try to open cart drawer if available
                 if ($('cart-drawer').length) {
                   $('cart-drawer')[0].open();
                 } else if ($('.js-drawer-open-right, [data-cart-drawer]').length) {
@@ -518,7 +494,6 @@
               }
             });
 
-            // Visual feedback
             $btn.removeClass('loading')
               .text('Added!')
               .addClass('success');
@@ -557,7 +532,6 @@
         });
       });
 
-      // Enhanced keyboard navigation
       const $focusableElements = $('.variant-select, .add-to-cart-btn');
 
       $focusableElements.each(function () {
@@ -571,7 +545,6 @@
         }
       });
 
-      // Add custom styling for success/error states
       const styleSheet = document.createElement('style');
       styleSheet.textContent = `
         .add-to-cart-btn.success {

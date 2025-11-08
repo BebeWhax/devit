@@ -1,0 +1,619 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+
+<div class="outfit-builder-section page-width">
+  <div class="outfit-builder-container">
+    {% if section.settings.image %}
+    <div class="outfit-builder-image">
+      <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.image.alt | escape }}"
+        loading="lazy" width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}">
+    </div>
+    {% endif %}
+
+    <div class="outfit-builder-products">
+      <div class="swiper outfit-swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+          {% if block.settings.product != blank %}
+          {% assign product = block.settings.product %}
+          {% assign first_variant = product.selected_or_first_available_variant %}
+
+          <div class="swiper-slide outfit-product-card" data-block-id="{{ block.id }}">
+            <div class="product-image">
+              {% if product.featured_image %}
+              <img src="{{ product.featured_image | img_url: '300x' }}" alt="{{ product.featured_image.alt | escape }}"
+                loading="lazy">
+              {% endif %}
+            </div>
+
+            <div class="product-details">
+              <div class="product-header">
+                <h3 class="product-title">{{ product.title }}</h3>
+                <div class="product-price">
+                  {% if product.compare_at_price > product.price %}
+                  <span class="price-sale">{{ product.price | money }}</span>
+                  <span class="price-compare">{{ product.compare_at_price | money }}</span>
+                  {% else %}
+                  <span class="price-regular">{{ product.price | money }}</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if product.description != blank %}
+              <p class="product-description">{{ product.description | strip_html | truncate: 60 }}</p>
+              {% endif %}
+
+              <div class="product-actions">
+                {% if product.has_only_default_variant %}
+                <div class="variant-selector">
+                  <span class="variant-label">One Size</span>
+                </div>
+                {% else %}
+                <div class="variant-selector">
+                  <select class="variant-select" data-product-id="{{ product.id }}"
+                    aria-label="Select variant for {{ product.title }}">
+                    {% for variant in product.variants %}
+                    <option value="{{ variant.id }}" {% if variant==first_variant %}selected{% endif %} {% unless
+                      variant.available %}disabled{% endunless %}>
+                      {{ variant.title }}
+                      {% unless variant.available %} - Sold Out{% endunless %}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                {% endif %}
+
+                <button class="add-to-cart-btn" data-variant-id="{{ first_variant.id }}"
+                  data-product-id="{{ product.id }}" {% unless first_variant.available %}disabled{% endunless %}
+                  tabindex="0" aria-label="Add {{ product.title }} to cart">
+                  {% if first_variant.available %}
+                  Add to bag
+                  {% else %}
+                  Sold Out
+                  {% endif %}
+                </button>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .outfit-builder-section {
+    padding: 40px 20px;
+    margin: 0 auto;
+  }
+
+  .outfit-builder-container {
+    display: grid;
+    gap: 30px;
+  }
+
+  .outfit-builder-image {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .outfit-builder-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .outfit-builder-products {
+    width: 100%;
+  }
+
+  .outfit-swiper {
+    width: 100%;
+    padding-bottom: 40px;
+  }
+
+  .swiper-slide {
+    height: auto;
+  }
+
+  .outfit-product-card {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+  }
+
+  .product-image {
+    width: 140px;
+    height: 180px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .product-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .product-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .product-price {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .price-sale {
+    color: #d32f2f;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .price-compare {
+    color: #757575;
+    text-decoration: line-through;
+    font-size: 14px;
+  }
+
+  .price-regular {
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .product-description {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .variant-selector {
+    position: relative;
+  }
+
+  .variant-label {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    font-size: 13px;
+    text-align: center;
+    background: #f9f9f9;
+  }
+
+  .variant-select {
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    font-size: 13px;
+    background: #fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .variant-select:focus {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+
+  .add-to-cart-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .add-to-cart-btn:hover:not(:disabled) {
+    background: #333;
+  }
+
+  .add-to-cart-btn:focus {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+
+  .add-to-cart-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .add-to-cart-btn.loading {
+    position: relative;
+    color: transparent;
+  }
+
+  .add-to-cart-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spinner 0.6s linear infinite;
+  }
+
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .swiper-pagination {
+    bottom: 10px !important;
+  }
+
+  .swiper-pagination-bullet {
+    background: #000;
+    opacity: 0.3;
+  }
+
+  .swiper-pagination-bullet-active {
+    opacity: 1;
+  }
+
+  /* Tablet styles */
+  @media screen and (min-width: 750px) {
+    .outfit-builder-section {
+      padding: 60px 40px;
+    }
+
+    .outfit-builder-container {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .outfit-builder-products {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .outfit-swiper {
+      padding-bottom: 0;
+    }
+
+    .swiper-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .swiper-slide {
+      width: 100% !important;
+    }
+
+    .swiper-pagination {
+      display: none;
+    }
+
+    .outfit-product-card {
+      grid-template-columns: 180px 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .product-image {
+      width: 180px;
+      height: 230px;
+    }
+
+    .product-title {
+      font-size: 16px;
+    }
+
+    .product-description {
+      font-size: 14px;
+    }
+
+    .product-actions {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .variant-selector {
+      flex: 0 0 120px;
+    }
+
+    .add-to-cart-btn {
+      flex: 1;
+    }
+  }
+
+  /* Desktop styles */
+  @media screen and (min-width: 990px) {
+    .outfit-builder-container {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 60px;
+    }
+
+    .outfit-product-card {
+      grid-template-columns: 200px 1fr;
+      gap: 24px;
+      padding: 24px;
+    }
+
+    .product-image {
+      width: 200px;
+      height: 260px;
+    }
+  }
+
+  /* Mobile-specific styles */
+  @media screen and (max-width: 749px) {
+    .outfit-builder-image {
+      max-height: 500px;
+    }
+
+    .outfit-builder-image img {
+      max-height: 500px;
+      object-fit: cover;
+    }
+  }
+
+  @media screen and (min-width: 320px) {
+    .outfit-builder-section {
+      min-width: 320px;
+    }
+  }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" defer ></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+
+<script>
+  (function ($) {
+    'use strict';
+
+    $(document).ready(function () {
+      // Initialize Swiper for mobile
+      let swiper;
+
+      function initSwiper() {
+        if (window.innerWidth < 750 && !swiper) {
+          swiper = new Swiper('.outfit-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true,
+            },
+            a11y: {
+              enabled: true,
+              prevSlideMessage: 'Previous product',
+              nextSlideMessage: 'Next product',
+            }
+          });
+        } else if (window.innerWidth >= 750 && swiper) {
+          swiper.destroy(true, true);
+          swiper = null;
+        }
+      }
+
+      initSwiper();
+      $(window).on('resize', initSwiper);
+
+      // Handle variant selection
+      $('.variant-select').on('change', function () {
+        const $card = $(this).closest('.outfit-product-card');
+        const $addBtn = $card.find('.add-to-cart-btn');
+        const $selectedOption = $(this).find('option:selected');
+
+        $addBtn.attr('data-variant-id', $(this).val());
+
+        if ($selectedOption.is(':disabled')) {
+          $addBtn.prop('disabled', true).text('Sold Out');
+        } else {
+          $addBtn.prop('disabled', false).text('Add to bag');
+        }
+      });
+
+      // Handle add to cart with jQuery AJAX
+      $('.add-to-cart-btn').on('click', function (e) {
+        e.preventDefault();
+
+        const $btn = $(this);
+
+        if ($btn.prop('disabled')) {
+          return;
+        }
+
+        const variantId = $btn.data('variant-id');
+        const originalText = $btn.text();
+
+        // Add loading state
+        $btn.addClass('loading').prop('disabled', true);
+
+        // AJAX request to add product to cart
+        $.ajax({
+          url: '/cart/add.js',
+          method: 'POST',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify({
+            id: variantId,
+            quantity: 1
+          }),
+          success: function (data) {
+            console.log('Product added to cart:', data);
+
+            // Update cart count if theme has this functionality
+            if (typeof theme !== 'undefined' && theme.cartUpdateAll) {
+              theme.cartUpdateAll();
+            }
+
+            // Trigger custom cart update event
+            $(document).trigger('cart:updated', data);
+
+            // Get updated cart data
+            $.ajax({
+              url: '/cart.js',
+              method: 'GET',
+              dataType: 'json',
+              success: function (cart) {
+                console.log('Cart updated:', cart);
+
+                // Update cart count in theme
+                if ($('.cart-count, .cart-count-bubble').length) {
+                  $('.cart-count, .cart-count-bubble').text(cart.item_count);
+                }
+
+                // Try to open cart drawer if available
+                if ($('cart-drawer').length) {
+                  $('cart-drawer')[0].open();
+                } else if ($('.js-drawer-open-right, [data-cart-drawer]').length) {
+                  $('.js-drawer-open-right, [data-cart-drawer]').first().trigger('click');
+                }
+              }
+            });
+
+            // Visual feedback
+            $btn.removeClass('loading')
+              .text('Added!')
+              .addClass('success');
+
+            setTimeout(function () {
+              $btn.text(originalText)
+                .removeClass('success')
+                .prop('disabled', false);
+            }, 2000);
+          },
+          error: function (xhr, status, error) {
+            console.error('Error adding to cart:', error);
+            console.error('Response:', xhr.responseText);
+
+            let errorMessage = 'Error';
+
+            try {
+              const response = JSON.parse(xhr.responseText);
+              if (response.description) {
+                errorMessage = response.description;
+              }
+            } catch (e) {
+              // Use default error message
+            }
+
+            $btn.removeClass('loading')
+              .text(errorMessage)
+              .addClass('error');
+
+            setTimeout(function () {
+              $btn.text(originalText)
+                .removeClass('error')
+                .prop('disabled', false);
+            }, 3000);
+          }
+        });
+      });
+
+      // Enhanced keyboard navigation
+      const $focusableElements = $('.variant-select, .add-to-cart-btn');
+
+      $focusableElements.each(function () {
+        $(this).attr('tabindex', '0');
+      });
+
+      $focusableElements.on('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          $(this).trigger('click');
+        }
+      });
+
+      // Add custom styling for success/error states
+      const styleSheet = document.createElement('style');
+      styleSheet.textContent = `
+        .add-to-cart-btn.success {
+          background: #4caf50 !important;
+        }
+        .add-to-cart-btn.error {
+          background: #f44336 !important;
+        }
+      `;
+      document.head.appendChild(styleSheet);
+    });
+  })(jQuery);
+</script>
+
+{% schema %}
+{
+"name": "Outfit Builder",
+"settings": [
+  {
+  "type": "image_picker",
+  "id": "image",
+  "label": "Outfit Image"
+  }
+],
+"blocks": [
+  {
+    "type": "product",
+    "name": "Product",
+    "settings": [
+        {
+        "type": "product",
+        "id": "product",
+        "label": "Select Product"
+        }
+      ]
+  }
+],
+  "presets": [
+    {
+      "name": "Outfit Builder",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

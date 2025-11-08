@@ -14,14 +14,13 @@
       {{ 'icon-account.svg' | inline_asset_content | link_to: routes.account_url }}
     {% endif %}
 
-    <a href="{{ routes.cart_url }}" class="header-cart-link">
-  <span class="cart-icon">
-    {{ 'icon-cart.svg' | inline_asset_content }}
-  </span>
-  <sup class="cart-count" {% if cart.item_count == 0 %}style="display:none"{% endif %}>
-    {{ cart.item_count }}
-  </sup>
-</a>
+    <a href="{{ routes.cart_url }}">
+      {% if cart.item_count > 0 %}
+        <sup сlass="cart-count">{{ cart.item_count }}</sup>
+      {% endif %}
+
+      {{ 'icon-cart.svg' | inline_asset_content }}
+    </a>
   </div>
 </header>
 

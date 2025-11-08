@@ -402,8 +402,7 @@
     'use strict';
 
     $(document).ready(function () {
-      let swiper;
-
+       let swiper;
       function initSwiper() {
         if (window.innerWidth < 750 && !swiper) {
           swiper = new Swiper('.outfit-swiper', {
@@ -413,18 +412,16 @@
               el: '.swiper-pagination',
               clickable: true,
             },
-            a11y: {
-              enabled: true,
-              prevSlideMessage: 'Previous product',
-              nextSlideMessage: 'Next product',
-            }
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            },
           });
         } else if (window.innerWidth >= 750 && swiper) {
           swiper.destroy(true, true);
           swiper = null;
         }
       }
-
       initSwiper();
       $(window).on('resize', initSwiper);
 

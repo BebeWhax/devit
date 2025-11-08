@@ -15,9 +15,9 @@
     {% endif %}
 
     <a href="{{ routes.cart_url }}" class="header-cart-link">
-      {% if cart.item_count > 0 %}
-        <sup сlass="cart-count">{{ cart.item_count }}</sup>
-      {% endif %}
+      <sup class="cart-count" {% if cart.item_count == 0 %}style="display:none"{% endif %}>
+        {{ cart.item_count }}
+      </sup>
 
       {{ 'icon-cart.svg' | inline_asset_content }}
     </a>

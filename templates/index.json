@@ -11,10 +11,51 @@
   "sections": {
     "main": {
       "type": "hello-world",
+      "disabled": true,
       "settings": {}
+    },
+    "custom_d3qiQh": {
+      "type": "custom",
+      "blocks": {
+        "product_xXc8Fc": {
+          "type": "product",
+          "settings": {
+            "product": "test1"
+          }
+        },
+        "product_3WVVwQ": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_tb7pEG": {
+          "type": "product",
+          "settings": {
+            "product": "test1"
+          }
+        },
+        "product_MDMQ8c": {
+          "type": "product",
+          "settings": {
+            "product": "test1"
+          }
+        }
+      },
+      "block_order": [
+        "product_xXc8Fc",
+        "product_3WVVwQ",
+        "product_tb7pEG",
+        "product_MDMQ8c"
+      ],
+      "name": "Outfit Builder",
+      "settings": {
+        "image": "shopify://shop_images/17.jpg"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "custom_d3qiQh"
   ]
 }

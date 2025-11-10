@@ -477,7 +477,11 @@
         >
           <a href="#" class="view-outfit-link" id="open-outfit-modal">View outfit details</a>
       </div>
-      
+    {% endif %}
+     {% if section.settings.section_description %}
+      <div class="description-text">
+        {{ section.settings.section_description }}
+      </div>
     {% endif %}
   </div>
 </div>
@@ -761,7 +765,8 @@
   {
   "type": "text",
   "id": "section_description",
-  "label": "Section description"
+  "label": "Section description",
+  "default": "Some text",
   },
 ],
 "blocks": [

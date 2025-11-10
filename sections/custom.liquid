@@ -397,6 +397,51 @@
     }
   }
 
+  .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-overlay.active {
+  display: flex;
+}
+.modal-content {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  max-width: 90%;
+  width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 22px;
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.view-outfit-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 14px;
+  text-decoration: underline;
+  color: #000;
+  cursor: pointer;
+  transition: color .2s ease;
+}
+.view-outfit-link:hover {
+  color: #555;
+}
+
 </style>
 
 <div class="outfit-builder-section page-width">

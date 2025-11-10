@@ -23,6 +23,12 @@
             "product": "test1"
           }
         },
+        "product_DrhBfC": {
+          "type": "product",
+          "settings": {
+            "product": "test1"
+          }
+        },
         "product_tb7pEG": {
           "type": "product",
           "settings": {
@@ -34,12 +40,34 @@
           "settings": {
             "product": "test1"
           }
+        },
+        "product_z4HKUA": {
+          "type": "product",
+          "settings": {
+            "product": "test1"
+          }
+        },
+        "product_zMMFnw": {
+          "type": "product",
+          "settings": {
+            "product": "test1"
+          }
+        },
+        "product_64LxrU": {
+          "type": "product",
+          "settings": {
+            "product": "test1"
+          }
         }
       },
       "block_order": [
         "product_xXc8Fc",
+        "product_DrhBfC",
         "product_tb7pEG",
-        "product_MDMQ8c"
+        "product_MDMQ8c",
+        "product_z4HKUA",
+        "product_zMMFnw",
+        "product_64LxrU"
       ],
       "name": "Outfit Builder",
       "settings": {

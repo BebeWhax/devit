@@ -599,7 +599,6 @@
                 errorMessage = response.description;
               }
             } catch (e) {
-              // Use default error message
             }
 
             $btn.removeClass('loading')
@@ -611,6 +610,34 @@
                 .removeClass('error')
                 .prop('disabled', false);
             }, 3000);
+          }
+        });
+      });
+
+       $('.view-gallery-link').on('click', function (e) {
+        e.preventDefault();
+        const targetId = $(this).data('gallery-id');
+        const $modal = $('#' + targetId);
+        $modal.addClass('active');
+        const modalSwiper = new Swiper('#' + targetId + ' .modal-swiper', {
+          slidesPerView: 1,
+          navigation: {
+            nextEl: '#' + targetId + ' .swiper-button-next',
+            prevEl: '#' + targetId + ' .swiper-button-prev',
+          },
+          pagination: {
+            el: '#' + targetId + ' .swiper-pagination',
+            clickable: true,
+          },
+        });
+        $modal.find('.modal-close').on('click', function () {
+          $modal.removeClass('active');
+          modalSwiper.destroy(true, true);
+        });
+        $modal.on('click', function (e) {
+          if ($(e.target).is('.modal-overlay')) {
+            $modal.removeClass('active');
+            modalSwiper.destroy(true, true);
           }
         });
       });

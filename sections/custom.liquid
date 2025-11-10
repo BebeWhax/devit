@@ -468,6 +468,13 @@
   <div class="modal-content">
     <button class="modal-close" aria-label="Close modal">&times;</button>
     <div class="outfit-builder-products">
+      <img
+          src="{{ section.settings.image | img_url: 'master' }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          loading="lazy"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+        >
       <div class="swiper outfit-swiper">
         <div class="swiper-wrapper">
           {% for block in section.blocks %}

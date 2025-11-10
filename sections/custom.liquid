@@ -585,6 +585,24 @@
         }
       });
 
+      $('#open-outfit-modal').on('click', function (e) {
+      e.preventDefault();
+      $('#outfit-modal').addClass('active');
+      initSwiper();
+    });
+
+    $('.modal-close').on('click', function () {
+      $('#outfit-modal').removeClass('active');
+      if (swiper) { swiper.destroy(true, true); swiper = null; }
+    });
+
+    $('#outfit-modal').on('click', function (e) {
+      if ($(e.target).is('.modal-overlay')) {
+        $('#outfit-modal').removeClass('active');
+        if (swiper) { swiper.destroy(true, true); swiper = null; }
+      }
+    });
+
       $('.add-to-cart-btn').on('click', function (e) {
         e.preventDefault();
 

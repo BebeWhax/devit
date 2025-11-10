@@ -397,190 +397,83 @@
     }
   }
 
-  .modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-.modal-overlay.active {
-  display: flex;
-}
-.modal-content {
-  position: relative;
-  background: #fff;
-  border-radius: 8px;
-  max-width: 90%;
-  width: 800px;
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  font-size: 20px;
-  color: #000;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 20;
-}
-.modal-swiper {
-  width: 100%;
-  height: 100%;
-}
-.modal-swiper img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-.modal-swiper .swiper-button-next,
-.modal-swiper .swiper-button-prev {
-  color: #000;
-}
-.modal-swiper .swiper-pagination-bullet {
-  background: #000;
-}
-.view-gallery-link {
-  display: inline-block;
-  margin-top: 6px;
-  font-size: 13px;
-  text-decoration: underline;
-  color: #000;
-  cursor: pointer;
-  transition: color .2s ease;
-}
-.view-gallery-link:hover {
-  color: #555;
-}
-
 </style>
 
 <div class="outfit-builder-section page-width">
   <div class="outfit-builder-container">
     {% if section.settings.image %}
-      <div class="outfit-builder-image">
-        <img
-          src="{{ section.settings.image | img_url: 'master' }}"
-          alt="{{ section.settings.image.alt | escape }}"
-          loading="lazy"
-          width="{{ section.settings.image.width }}"
-          height="{{ section.settings.image.height }}"
-        >
-      </div>
+    <div class="outfit-builder-image">
+      <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.image.alt | escape }}"
+        loading="lazy" width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}">
+    </div>
     {% endif %}
 
     <div class="outfit-builder-products">
       <div class="swiper outfit-swiper">
         <div class="swiper-wrapper">
           {% for block in section.blocks %}
-            {% if block.settings.product != blank %}
-              {% assign product = block.settings.product %}
-              {% assign first_variant = product.selected_or_first_available_variant %}
+          {% if block.settings.product != blank %}
+          {% assign product = block.settings.product %}
+          {% assign first_variant = product.selected_or_first_available_variant %}
 
-              <div class="swiper-slide outfit-product-card" data-block-id="{{ block.id }}">
-                <div class="product-image">
-                  {% if product.featured_image %}
-                    <img
-                      src="{{ product.featured_image | img_url }}"
-                      alt="{{ product.featured_image.alt | escape }}"
-                      loading="lazy"
-                    >
+          <div class="swiper-slide outfit-product-card" data-block-id="{{ block.id }}">
+            <div class="product-image">
+              {% if product.featured_image %}
+              <img src="{{ product.featured_image | img_url }}" alt="{{ product.featured_image.alt | escape }}"
+                loading="lazy">
+              {% endif %}
+            </div>
+
+            <div class="product-details">
+              <div class="product-header">
+                <h3 class="product-title">{{ product.title }}</h3>
+                <div class="product-price">
+                  {% if product.compare_at_price > product.price %}
+                  <span class="price-sale">{{ product.price | money }}</span>
+                  <span class="price-compare">{{ product.compare_at_price | money }}</span>
+                  {% else %}
+                  <span class="price-regular">{{ product.price | money }}</span>
                   {% endif %}
                 </div>
-                <a href="#" class="view-gallery-link" data-gallery-id="gallery-{{ block.id }}">
-                  View gallery
-                </a>
-
-                <div class="product-details">
-                  <div class="product-header">
-                    <h3 class="product-title">{{ product.title }}</h3>
-                    <div class="product-price">
-                      {% if product.compare_at_price > product.price %}
-                        <span class="price-sale">{{ product.price | money }}</span>
-                        <span class="price-compare">{{ product.compare_at_price | money }}</span>
-                      {% else %}
-                        <span class="price-regular">{{ product.price | money }}</span>
-                      {% endif %}
-                    </div>
-                  </div>
-
-                  {% if product.description != blank %}
-                    <p class="product-description">{{ product.description | strip_html | truncate: 60 }}</p>
-                  {% endif %}
-
-                  <div class="product-actions">
-                    {% if product.has_only_default_variant %}
-                      <div class="variant-selector">
-                        <span class="variant-label">One Size</span>
-                      </div>
-                    {% else %}
-                      <div class="variant-selector">
-                        <select
-                          class="variant-select"
-                          data-product-id="{{ product.id }}"
-                          aria-label="Select variant for {{ product.title }}"
-                        >
-                          {% for variant in product.variants %}
-                            <option
-                              value="{{ variant.id }}"
-                              {% if variant == first_variant %}selected{% endif %}
-                              {% unless variant.available %}disabled{% endunless %}
-                            >
-                              {{ variant.title }}
-                              {% unless variant.available %} - Sold Out{% endunless %}
-                            </option>
-                          {% endfor %}
-                        </select>
-                      </div>
-                    {% endif %}
-
-                    <button
-                      class="add-to-cart-btn"
-                      data-variant-id="{{ first_variant.id }}"
-                      data-product-id="{{ product.id }}"
-                      {% unless first_variant.available %}disabled{% endunless %}
-                      tabindex="0"
-                      aria-label="Add {{ product.title }} to cart"
-                    >
-                      {% if first_variant.available %}
-                        Add to bag
-                      {% else %}
-                        Sold Out
-                      {% endif %}
-                    </button>
-                  </div>
-                </div>
-
-                <div class="modal-overlay" id="gallery-{{ block.id }}">
-                  <div class="modal-content">
-                    <button class="modal-close" aria-label="Close modal">&times;</button>
-                    <div class="swiper modal-swiper">
-                      <div class="swiper-wrapper">
-                        {% for image in product.images %}
-                          <div class="swiper-slide">
-                            <img
-                              src="{{ image | img_url: 'master' }}"
-                              alt="{{ image.alt | escape }}"
-                            >
-                          </div>
-                        {% endfor %}
-                      </div>
-                      <div class="swiper-pagination"></div>
-                      <div class="swiper-button-prev"></div>
-                      <div class="swiper-button-next"></div>
-                    </div>
-                  </div>
-                </div>
-
               </div>
-            {% endif %}
+
+              {% if product.description != blank %}
+              <p class="product-description">{{ product.description | strip_html | truncate: 60 }}</p>
+              {% endif %}
+
+              <div class="product-actions">
+                {% if product.has_only_default_variant %}
+                <div class="variant-selector">
+                  <span class="variant-label">One Size</span>
+                </div>
+                {% else %}
+                <div class="variant-selector">
+                  <select class="variant-select" data-product-id="{{ product.id }}"
+                    aria-label="Select variant for {{ product.title }}">
+                    {% for variant in product.variants %}
+                    <option value="{{ variant.id }}" {% if variant==first_variant %}selected{% endif %} {% unless
+                      variant.available %}disabled{% endunless %}>
+                      {{ variant.title }}
+                      {% unless variant.available %} - Sold Out{% endunless %}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                {% endif %}
+
+                <button class="add-to-cart-btn" data-variant-id="{{ first_variant.id }}"
+                  data-product-id="{{ product.id }}" {% unless first_variant.available %}disabled{% endunless %}
+                  tabindex="0" aria-label="Add {{ product.title }} to cart">
+                  {% if first_variant.available %}
+                  Add to bag
+                  {% else %}
+                  Sold Out
+                  {% endif %}
+                </button>
+              </div>
+            </div>
+          </div>
+          {% endif %}
           {% endfor %}
         </div>
 
@@ -671,6 +564,7 @@
               success: function (cart) {
                 console.log('Cart updated:', cart);
 
+                // Update cart count in theme
                 if ($('.cart-count, .cart-count-bubble').length) {
                   $('.cart-count, .cart-count-bubble').text(cart.item_count);
                 }
@@ -705,6 +599,7 @@
                 errorMessage = response.description;
               }
             } catch (e) {
+              // Use default error message
             }
 
             $btn.removeClass('loading')
@@ -716,34 +611,6 @@
                 .removeClass('error')
                 .prop('disabled', false);
             }, 3000);
-          }
-        });
-      });
-
-       $('.view-gallery-link').on('click', function (e) {
-        e.preventDefault();
-        const targetId = $(this).data('gallery-id');
-        const $modal = $('#' + targetId);
-        $modal.addClass('active');
-        const modalSwiper = new Swiper('#' + targetId + ' .modal-swiper', {
-          slidesPerView: 1,
-          navigation: {
-            nextEl: '#' + targetId + ' .swiper-button-next',
-            prevEl: '#' + targetId + ' .swiper-button-prev',
-          },
-          pagination: {
-            el: '#' + targetId + ' .swiper-pagination',
-            clickable: true,
-          },
-        });
-        $modal.find('.modal-close').on('click', function () {
-          $modal.removeClass('active');
-          modalSwiper.destroy(true, true);
-        });
-        $modal.on('click', function (e) {
-          if ($(e.target).is('.modal-overlay')) {
-            $modal.removeClass('active');
-            modalSwiper.destroy(true, true);
           }
         });
       });

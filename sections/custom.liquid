@@ -369,7 +369,9 @@
       grid-template-columns: 1fr 1.2fr;
       gap: 60px;
     }
-
+    .outfit-builder-products {
+      flex-direction: row;
+    }
     .outfit-product-card {
       grid-template-columns: 200px 1fr;
       gap: 24px;
@@ -468,7 +470,7 @@
   <div class="modal-content">
     <button class="modal-close" aria-label="Close modal">&times;</button>
     <div class="outfit-builder-products">
-      <img
+      <img class="modal-image"
           src="{{ section.settings.image | img_url: 'master' }}"
           alt="{{ section.settings.image.alt | escape }}"
           loading="lazy"
